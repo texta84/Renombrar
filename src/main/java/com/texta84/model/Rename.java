@@ -42,14 +42,14 @@ public class Rename {
             pathDestination = pathDestination + ".fil";
         }
         try {
-            Path rutaOrigen = Paths.get(pathOrigin);
-            Path rutaDestino = Paths.get(pathDestination);
+            Path originPath = Paths.get(pathOrigin);
+            Path destinationPath = Paths.get(pathDestination);
 
             CopyOption[] opciones = new CopyOption[]{
-                StandardCopyOption.REPLACE_EXISTING,
-                StandardCopyOption.COPY_ATTRIBUTES
+                    StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.COPY_ATTRIBUTES
             };
-            Files.copy(rutaOrigen, rutaDestino, opciones);
+            Files.copy(originPath, destinationPath, opciones);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

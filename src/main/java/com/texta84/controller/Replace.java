@@ -2,6 +2,7 @@ package com.texta84.controller;
 
 import com.texta84.model.Rename;
 import com.texta84.ui.UI_Principal;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.HeadlessException;
@@ -246,14 +247,16 @@ public class Replace {
     private void searchFile(JFileChooser jFileChooser, DefaultTableModel defaultTableModel) {
         File[] files = jFileChooser.getSelectedFiles();
         ArrayList<File> fileList = new ArrayList<>();
-        Arrays.sort(files);
-        for (File file : files) {
-            String path = file.toString();
-            fileList.add(new File(path));
-            defaultTableModel.addRow(new Object[]{file.getName()});
+        if (files != null && files.length > 0) {
+            Arrays.sort(files);
+            for (File file : files) {
+                String path = file.toString();
+                fileList.add(new File(path));
+                defaultTableModel.addRow(new Object[]{file.getName()});
+            }
+            setListFiles(fileList);
+            setInitialPath(fileList.isEmpty() ? "" : fileList.getFirst().getParent());
         }
-        setListFiles(fileList);
-        setInitialPath(fileList.isEmpty() ? "" : fileList.getFirst().getParent());
     }
 
     private void searchFiles(JFileChooser jFileChooser, DefaultTableModel defaultTableModel) {
@@ -261,26 +264,31 @@ public class Replace {
         String separator = FileSystems.getDefault().getSeparator();
         String initialPath = jFileChooser.getSelectedFile().getAbsolutePath();
         File folderFile = new File(initialPath);
-        File[] filesSQLs = folderFile.listFiles();
-        assert filesSQLs != null;
-        Arrays.sort(filesSQLs);
-        for (File file : filesSQLs) {
-            String path = initialPath + separator + file.getName();
-            fileList.add(new File(path));
-            defaultTableModel.addRow(new Object[]{file.getName()});
+        File[] filesFolder = folderFile.listFiles();
+        if (filesFolder != null && filesFolder.length > 0) {
+            Arrays.sort(filesFolder);
+            for (File file : filesFolder) {
+                String path = initialPath + separator + file.getName();
+                fileList.add(new File(path));
+                defaultTableModel.addRow(new Object[]{file.getName()});
+            }
+            setListFiles(fileList);
+            setInitialPath(initialPath);
         }
-        setListFiles(fileList);
-        setInitialPath(initialPath);
     }
 
     private void searchFolders(JFileChooser jFileChooser, DefaultTableModel defaultTableModel) {
         ArrayList<File> folderList = new ArrayList<>();
-        for (File folder : jFileChooser.getSelectedFiles()) {
-            for (File file : Objects.requireNonNull(folder.listFiles())) {
-                if (file.isDirectory()) {
-                    String path = file.toString();
-                    folderList.add(new File(path));
-                    defaultTableModel.addRow(new Object[]{file.getName()});
+        File[] folders = jFileChooser.getSelectedFiles();
+        if (folders != null && folders.length > 0) {
+            Arrays.sort(folders);
+            for (File folder : folders) {
+                for (File file : Objects.requireNonNull(folder.listFiles())) {
+                    if (file.isDirectory()) {
+                        String path = file.toString();
+                        folderList.add(new File(path));
+                        defaultTableModel.addRow(new Object[]{file.getName()});
+                    }
                 }
             }
         }
@@ -291,14 +299,16 @@ public class Replace {
     private void searchFiles(String path) {
         DefaultTableModel defaultTableModel = (DefaultTableModel) Replace.this.uiPrincipal.jTable.getModel();
         defaultTableModel.setRowCount(0);
-        File files = new File(path);
+        File folder = new File(path);
         ArrayList<File> fileList = new ArrayList<>();
-        for (File file : Objects.requireNonNull(files.listFiles())) {
-            String createdPath = file.toString();
-            fileList.add(new File(createdPath));
-            defaultTableModel.addRow(new Object[]{file.getName()});
+        if (folder.exists()) {
+            for (File file : Objects.requireNonNull(folder.listFiles())) {
+                String createdPath = file.toString();
+                fileList.add(new File(createdPath));
+                defaultTableModel.addRow(new Object[]{file.getName()});
+            }
+            setListFiles(fileList);
         }
-        setListFiles(fileList);
     }
 
     public void setListFiles(ArrayList<File> files) {
