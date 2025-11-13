@@ -14,13 +14,7 @@ import java.nio.file.StandardCopyOption;
  */
 public class Rename {
 
-    private String newName;
-
-    public Rename() {
-        this.newName = "";
-    }
-
-    public void setRenameFile(File file, String searchText, String replaceText) {
+    public static File setRenameFile(File file, String searchText, String replaceText) {
         boolean status = false;
         if (file.getName().contains(searchText)) {
             String path = file.toString().replace(searchText, replaceText).replace(".fil", "");
@@ -32,34 +26,31 @@ public class Rename {
                 status = oldFile.renameTo(newFile);
             }
             if (status) {
-                setNewName(newFile.getName());
+                return newFile;
             }
         }
+        return null;
     }
 
-    public void setCopyFile(String pathOrigin, String pathDestination, boolean rename) {
+    public static File setCopyFile(String pathOrigin, String pathDestination, boolean rename) {
         if (rename) {
             pathDestination = pathDestination + ".fil";
         }
+        Path originPath = Paths.get(pathOrigin);
+        Path destinationPath = Paths.get(pathDestination);
         try {
-            Path originPath = Paths.get(pathOrigin);
-            Path destinationPath = Paths.get(pathDestination);
-
             CopyOption[] opciones = new CopyOption[]{
                     StandardCopyOption.REPLACE_EXISTING,
                     StandardCopyOption.COPY_ATTRIBUTES
             };
-            Files.copy(originPath, destinationPath, opciones);
+            Path newPath = Files.copy(originPath, destinationPath, opciones);
+            if (newPath.toFile().exists()) {
+                return newPath.toFile();
+            } else {
+                return null;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void setNewName(String nvoNombre) {
-        this.newName = nvoNombre;
-    }
-
-    public String getNewName() {
-        return this.newName;
     }
 }
