@@ -39,7 +39,7 @@ public class Replace {
     }
 
     private void initComponents() {
-        this.uiPrincipal.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/icono.png"))).getImage());
+        this.uiPrincipal.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/icon.png"))).getImage());
         this.uiPrincipal.setLocationRelativeTo(null);
         this.uiPrincipal.setTitle("RENOMBRAR ARCHIVOS - @texta84");
         this.uiPrincipal.jButtonReplace.setText("RENOMBRAR");
