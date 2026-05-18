@@ -15,12 +15,9 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Replace replace = new Replace();
-                replace.uiPrincipal.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            Replace replace = new Replace();
+            replace.uiPrincipal.setVisible(true);
         });
     }
 }
